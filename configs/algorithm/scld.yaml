@@ -1,0 +1,88 @@
+# Sequential Controlled Langevin Diffusions (SCLD)
+name: scld
+num_steps: 128  # Total number of steps / bridges. Defines the number of steps per sub-trajectory as n_steps / n_steps_per_traj
+n_sub_traj: ${target.scld.n_sub_traj} # 1 means no subtrajectories
+batch_size: 
+init_std: ${target.scld.initial_scale}  # Standard deviation of the prior distribution
+max_diffusion: ${target.scld.max_diffusion} # the max_diffusion supplied to noise schedule
+
+grad_clip: 1.  # Value for L2 Gradient clipping. If negative, no gradient clipping is applied. 1.0 is good default
+target_clip: -1  # Clips the value of the gradient of the target used in Langevin dynamics
+langevin_norm_clip: 1000000 # clip the langevin by rescaling 
+
+loss: "rev_lv"  # Choose between [rev_kl, fwd_kl, rev_lv, fwd_lv, rev_tb, fwd_tb]
+
+prior:
+  learn_variance: True
+  learn_mean: True
+  lr: ${target.scld.step_size} 
+
+# Optimizer settings
+# https://optax.readthedocs.io/en/latest/api/optimizer_schedules.html#optax.warmup_exponential_decay_schedule
+step_size: ${target.scld.step_size}   # Learning rate or peak_lr if scheduling
+use_warmup: False
+num_warmup_steps: 1000
+initial_lr: 1e-4
+
+use_decay: False
+num_steps_before_start_decay: 0
+decay_factor_per_thousand: 0.35
+final_lr: 1e-5
+
+
+# parameters specific to TB loss
+# TB loss is experimental and untested!
+use_jensen_trick: False # if True, use improved estimator for lnZ
+logZ_step_size: 0.05 # Learning rate for updating log Z for second-moment loss
+init_logZ: 0. # Initial value for learnable log Z for second-moment loss
+
+# number iterations settings
+n_sim: 8000  # Outer loop iterations: Simulates the SDE + MCMC and puts samples in the buffer
+n_updates_per_sim: 1  # Inner loop iterations: Uses samples from the buffer to optimze the model on sub-trajectories
+
+# SMC settings
+use_resampling: True # Flag whether to use resampling or not at train
+use_resampling_inference: True # Flag whether to use resampling at Inference time
+resample_threshold: 0.3  # Threshold for resampling
+resampler: # Type of resampling scheme. Choose between [multinomial, systematic]
+  _target_: algorithms.scld.resampling.get_resampler
+  identifier: multinomial #partial_sample
+  resampler_args: [False, 1.]
+
+use_markov: True # Flag whether to use MCMC or not at train
+use_markov_inference: True # Flag whether to use MCMC at Inference time
+
+buffer:
+  use_buffer: True # if no, then use simplified SCLD training
+  prioritized: True # if False, then equivalent to temperature = infinity (i.e no prioritization)
+  max_length_in_batches: 20. # Maximum length of buffer in batches. Setting this to 1 corresponds to not using a buffer
+  min_length_in_batches: 1. # Can be ignored
+  sample_with_replacement: False
+  update_weights: True 
+  temperature: 1
+
+defaults:
+  - model: pisgrad_net  # Parameterized model
+  - noise_schedule: cosine # Scheduler for the diffusion coefficient. Choose between [const, linear, cosine]
+  - mcmc: hmc # MCMC transition kernel. Choose between [hmc, mh]
+
+model:
+  bias_init: 0.  # Initialization of the last layers' bias of the time-dependent network
+  weight_init: 1e-8  # Initialization of the last layers' weights of the time-dependent network
+
+learn_max_diffusion: False
+
+noise_schedule:
+  reverse: False  # Ensures correct that noise scheduler goes in the right direction (time-wise)
+
+annealing_schedule:
+  schedule_type: "learnt" # uniform or cosine OR learnt
+  schedule_lr: ${target.scld.annealing_step_size} 
+
+mfvi: # can choose to initialize prior by Mean Field Gaussian learnt by VI
+  use_mfvi: False
+  init_mean: 0
+  init_std: 1.0
+  step_size: 1e-3
+  batch_size: 2000
+  num_its: 50000

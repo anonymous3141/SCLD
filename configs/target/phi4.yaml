@@ -1,0 +1,40 @@
+name: phi4
+dim: 128
+kappa: 0.3
+has_entropy: False
+
+fn:
+  _target_: targets.phi4.Phi4Distr
+  dim: ${target.dim}
+  kappa: ${target.kappa}
+  lambd: 0.022
+  log_Z:
+  can_sample: False
+  sample_bounds: None
+
+# Experiment-specific algorithm parameters
+# ----------------------------------------
+hmc:  # Hamilton Monte Carlo
+  hmc_step_size: [0.1, 0.1] #[0.01,0.1] 
+
+underdamped:
+  friction: 1.
+
+smc_rebuttal:
+  initial_scale: 1.0
+  target_ess: 0.99
+  hmc_step_size: [0.05, 0.1]
+
+overdamped:
+  friction: 1.
+
+gmmvi: # Gaussian Mixture Model Variational Inference
+  initial_scale: 5.
+
+cmcd: # CMCD
+  initial_scale: 1. #0.1
+  max_diffusion: 1.
+  step_size: 1e-3
+
+all: # Parameters that are shared between all algorithms
+  batch_size: 2000

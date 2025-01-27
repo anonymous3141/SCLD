@@ -1,0 +1,33 @@
+# Time-reversed Diffusion Sampler (DIS)
+name: cmcd2
+step_size: ${target.cmcd.step_size}
+batch_size: ${target.all.batch_size}
+iters: 8000
+init_std: ${target.cmcd.initial_scale}
+num_steps: 128
+loss: "elbo"
+
+use_pseudo_huber: False # for if using tb
+huber_delta: 300 # based on observed rnd stats
+
+
+grad_clip: 1.
+max_diffusion: ${target.cmcd.max_diffusion}
+learn_prior: False
+learn_betas: False
+
+defaults:
+  - model: pisgrad_net
+  - noise_schedule: cosine
+
+model:
+  bias_init: 0.
+  weight_init: 1e-8
+
+noise_schedule:
+  reverse: False
+
+buffer:
+  use_buffer: False
+  num_buffer_batches: 20
+

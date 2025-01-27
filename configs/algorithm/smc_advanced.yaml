@@ -1,0 +1,24 @@
+name: smc_rebuttal
+batch_size: ${target.all.batch_size}
+#num_temps: 128
+#resample_threshold: 0.3
+#use_resampling: True
+#use_markov: True
+
+init_mean: 0.
+init_std: ${target.smc_rebuttal.initial_scale}
+target_ess: ${target.smc_rebuttal.target_ess}
+#
+#defaults:
+#  - common: mcmc
+mcmc:
+  adaptive_tuning: True
+  mcmc_kernel: 'hmc'
+  hmc_step_times: [0., 0.5]
+  hmc_step_sizes: ${target.smc_rebuttal.hmc_step_size}
+  hmc_steps_per_iter: 1
+  hmc_num_leapfrog_steps: 10
+
+#defaults:
+#  - mcmc/hmc
+#  - common/norm_flow

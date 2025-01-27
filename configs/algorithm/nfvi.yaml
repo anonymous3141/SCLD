@@ -1,0 +1,16 @@
+# NFVI
+name: 'nfvi'
+iters: 2500
+batch_size: ${target.all.batch_size}
+step_size: 1e-5
+
+num_stack: 6
+flow_type: 'ComposedFlows'
+
+init_mean: 0.
+init_std: 1.
+
+defaults:
+  - flows/da
+
+

@@ -1,0 +1,33 @@
+# @package _global_
+defaults:
+  - override /hydra/launcher: clusterduck_slurm
+
+
+hydra:
+  mode: MULTIRUN  # needed for launcher to be used
+
+  launcher:
+    # Horeka cpu only config
+    timeout_min: 500
+    name: benchmark #${hydra.job.name}
+    partition: accelerated-h100
+    #    gpus_per_node: 4
+    gres: gpu:4
+#    setup:
+      # Create wandb folder in fast, job-local storage: https://www.nhr.kit.edu/userdocs/horeka/filesystems/#tmpdir
+      # NOTE: wandb folder will be deleted after job completion, but by then it will have synced with server
+#      - export WANDB_DIR=$TMPDIR/wandb
+#      - mkdir -pv $WANDB_DIR
+#      - export WANDB_CONSOLE=off
+#    cpus-per-task: 152
+#    additional_parameters: { "ntasks": 1, "gres": gpu:4, "cpus-per-task": 152 }
+
+    #clusterduck specific options
+    parallel_runs_per_node: 4
+    total_runs_per_node: null
+    resources_config:
+      cpu:
+      cuda:
+      rendering:
+      stagger:
+        delay: 5

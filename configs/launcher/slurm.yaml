@@ -1,0 +1,14 @@
+# @package _global_
+defaults:
+- override /hydra/launcher: submitit_slurm
+
+hydra:
+  mode: MULTIRUN  # needed for launcher to be used
+
+  launcher:
+    timeout_min: 1440
+    gres: gpu:1  # we want all GPUs in a node
+    mem_per_cpu: 7500  # in MB (* 8 cores in use = 120GB)
+    exclude: node[4-5]  # e.g. do not allocate on these nodes because the RTX2080 doesn't have enough VRAM
+    additional_parameters:
+      cpus-per-task: 4

@@ -1,0 +1,14 @@
+# Unadjusted Langevin Annealing (ULA)
+name: 'ula'
+num_temps: 128
+batch_size: ${target.all.batch_size}
+step_size: ${target.od_langevin.step_size}
+eps: 0.01
+trainable:
+  - eps
+  - betas
+iters: 10000
+
+init_mean: 0.
+init_std: ${target.od_langevin.initial_scale}
+

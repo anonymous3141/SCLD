@@ -1,0 +1,21 @@
+# Langevin Diffusion Variational Inference (LDVI)
+name: 'ldvi'
+num_temps: 128
+batch_size: ${target.all.batch_size}
+step_size: ${target.ud_langevin.step_size}
+eps: ${target.ud_langevin.eps}
+gamma: 0.01
+trainable:
+  - eps
+  - gamma
+  - betas
+iters: 40000
+
+init_mean: 0.
+init_std: ${target.ud_langevin.initial_scale}
+
+approx_network: "pis"  # score or pis
+pis_network_fully_connected_units: [64, 64]
+score_network_emb_dim: 20
+score_network_num_layer: 2  # number of units per layer is always x_dim + emb_dim
+

@@ -1,0 +1,77 @@
+name: sonar
+dim: 61
+has_entropy: False
+
+fn:
+  _target_: targets.sonar.Sonar
+  log_Z:
+  can_sample: False
+  sample_bounds: None
+
+# Experiment-specific algorithm parameters
+# ----------------------------------------
+
+mfvi: # Gaussian Mean Field Variational Inference
+  initial_scale: 0.1
+  step_size: 1e-3
+
+gmmvi: # Gaussian Mixture Model Variational Inference
+  initial_scale: 1.
+
+hmc:  # Hamilton Monte Carlo
+  hmc_step_size: [0.05, 0.001]
+
+smc: # Sequential Monte Carlo Sampler
+  initial_scale: 1.
+
+smc_rebuttal:
+  initial_scale: 1.
+  target_ess: 0.99
+  hmc_step_size: [0.05, 0.01]
+
+flow_transport: # Flow Transport Methods (AFT/CRAFT)
+  initial_scale: 1.
+  step_size: 1e-3
+
+fab: # Flow Annealed Importance Sampling Bootstrap
+  initial_scale:  0.1
+  step_size: 1e-3
+
+dds: # Denoising Diffusion Sampler
+  initial_scale: 1.
+  step_size: 1e-3
+  max_diffusion: 6.
+dis: # Time-reversed Diffusion Sampler
+  initial_scale: 1.
+  step_size: 1e-3
+
+pis: # Path Integral Sampler
+  step_size: 1e-3
+
+cmcd: # CMCD
+  initial_scale: 1.
+  max_diffusion: 10.
+  step_size: 
+
+scld:
+  initial_scale: 1.
+  max_diffusion: 1.
+  step_size: 1e-3
+  annealing_step_size: 1e-2
+  n_sub_traj: 128
+
+ud_langevin:  # Underdamped Langevin Methods (UHA/LDVI)
+  initial_scale: 1.
+  step_size: 1e-3
+
+od_langevin:  # Overdamped Langevin Methods (ULA/MCD/CMCD)
+  initial_scale: .1
+  step_size: 1e-3
+
+gsb:  # General Schroedinger Bridge
+  max_diffusion: 10.
+  initial_scale: .1
+  step_size: 1e-3
+
+all: # Parameters that are shared between all algorithms
+  batch_size: 2000

@@ -1,0 +1,53 @@
+# @package _global_
+defaults:
+  - target: gaussian
+  - algorithm: mfvi
+  - setup
+  - _self_
+
+seed: 0
+log_dir: logs/${algorithm.name}_${target.name}_${target.dim}D_${seed}_${now:%Y-%m-%d}/${now:%H-%M-%S}
+#use_jit: False  # Disable jit for better debugging
+use_jit: True
+eval_samples: 2000
+n_evals: 100
+moving_average:
+  use_ma: True
+  window_size: 5
+discrepancies: [sd, mmd]
+compute_emc: True
+compute_forward_metrics: True
+use_wandb: True
+verbose: True
+visualize_samples: True
+save_samples: False
+save_model: False
+
+hydra:
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - launcher
+          - ckpt_file
+          - wandb.project
+          - wandb.id
+          - algorithm.prior.learn_mean
+          - algorithm.prior.learn_variance
+          - unique_id
+          - algorithm.model.num_hid
+          - algorithm.model.inner_clip
+          - algorithm.resampler.resampler_args
+          - algorithm.n_sub_traj
+          - algorithm.annealing_schedule.schedule_lr
+          - algorithm.noise_schedule.sigma_min
+          - algorithm.noise_schedule.s
+          - target.cmcd.step_size
+          - target.flow_transport.initial_scale
+          - target.flow_transport.step_size
+          - algorithm.num_temps
+          - algorithm.config_tag
+          - algorithm.buffer.max_length_in_batches
+          - algorithm.n_sim
+          - algorithm.use_markov
+          - algorithm.use_resampling
