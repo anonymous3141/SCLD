@@ -32,8 +32,8 @@ The respective configuration files can be found [here](configs/target).
 First, clone the repo:
 
   ```
-  git clone git@github.com:DenisBless/variational_sampling_methods.git
-  cd variational_sampling_methods
+  git clone git@github.com:anonymous3141/SCLD.git
+  cd SCLD
   ```
 
 We recommend using [Conda](https://conda.io/docs/user-guide/install/download.html) to set up the codebase:
