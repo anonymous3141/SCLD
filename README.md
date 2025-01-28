@@ -86,15 +86,6 @@ python3 run.py algorithm=scld target=gaussian_mixture40 algorithm.buffer.use_buf
 If you use parts of this codebase in your research, please cite us using the following BibTeX entries.
 
 ```
-@misc{blessing2024elbos,
-      title={Beyond ELBOs: A Large-Scale Evaluation of Variational Methods for Sampling}, 
-      author={Denis Blessing and Xiaogang Jia and Johannes Esslinger and Francisco Vargas and Gerhard Neumann},
-      year={2024},
-      eprint={2406.07423},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
-
 @misc{chen2024sequentialcontrolledlangevindiffusions,
       title={Sequential Controlled Langevin Diffusions}, 
       author={Junhua Chen and Lorenz Richter and Julius Berner and Denis Blessing and Gerhard Neumann and Anima Anandkumar},
