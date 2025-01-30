@@ -1,7 +1,7 @@
 # Wandb
 wandb:
-  entity: jc2318
-  project: sampling_tests
+  entity: 
+  project: 
   resume: allow
   mode: run
   name:
